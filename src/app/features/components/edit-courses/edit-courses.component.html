@@ -1,0 +1,15 @@
+<div class="container">
+    <h3>Clases actuales</h3>
+    <mat-select>
+        <mat-option *ngFor="let course of availableCourses" [value]="course.idCourse">
+            {{course.name}}
+        </mat-option>
+    </mat-select>
+    <h3>Cursos del Alumno</h3>
+    <div class="current-courses-container" *ngFor="let course of studentCourses">
+        <label> {{course.name}} </label>
+        <button mat-flat-button color="warn"
+            (click)="removeClassroom(course.idCourse)">Eliminar</button>
+    </div>
+
+</div>

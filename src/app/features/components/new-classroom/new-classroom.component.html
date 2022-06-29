@@ -1,0 +1,38 @@
+<mat-card>
+    <div>
+        <form [formGroup]="classroomForm">
+            <mat-form-field>
+                <input matInput
+                type="text" placeholder="Nombre" formControlName="name" >
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput
+                type="text" placeholder="Apellido" formControlName="lastname" >
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput
+                [matDatepicker]="picker" 
+                placeholder="Choose a date of birth"
+                    readonly (click)="picker.open()">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>    
+            <mat-form-field>
+                <input matInput
+                type="email" placeholder="E-mail" formControlName="email" >
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Curso</mat-label>
+                <mat-select>
+                    <mat-option *ngIf="let course of dataCourses">
+                        {{course.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </form>
+        <div class="actions">
+            <button mat-button color="warn">Eliminar</button>
+            <button mat-flat-button color="primary" [disabled]="classroomForm.invalid">Guardar</button>
+        </div>
+    </div>
+</mat-card>

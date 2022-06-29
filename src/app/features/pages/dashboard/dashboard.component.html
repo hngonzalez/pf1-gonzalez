@@ -1,0 +1,18 @@
+<div class="container">
+    <mat-toolbar class="menu">
+        <span>ABM Estudiantes</span>
+        <button (click)="onCHangeView('Student')" mat-button>Alta Alumno</button>
+        <button (click)="onCHangeView('Course')" mat-button>Alta Curso</button>
+        <button (click)="onCHangeView('Classroom')" mat-button>Alta Aula</button>
+        <button (click)="onCHangeView('List')" mat-button>Lista ALUMNOS</button>
+    </mat-toolbar>
+   <div class="content">
+    <app-register 
+        *ngIf="curView != 'List'" 
+        [curView]="curView"
+        [dataCourses]="dataCourses"
+        [dataClassrooms]="dataClassrooms"
+    ></app-register>
+    <app-list *ngIf="curView == 'List'" [dataPersonsList]="dataPersonsList"></app-list>
+   </div>
+</div>
