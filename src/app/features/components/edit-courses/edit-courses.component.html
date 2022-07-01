@@ -1,10 +1,15 @@
 <div class="container">
     <h3>Clases actuales</h3>
-    <mat-select>
-        <mat-option *ngFor="let course of availableCourses" [value]="course.idCourse">
-            {{course.name}}
-        </mat-option>
-    </mat-select>
+    <div class="actions">
+        <mat-select [(ngModel)]="newCourse">
+            <mat-option *ngFor="let course of availableCourses" [value]="course">
+                {{course.name}}
+            </mat-option>
+        </mat-select>
+        <button mat-flat-button color="primary"(click)="onCourseChange()">Añadir</button>
+    </div>
+    <div class="texto"><h3 [hidden]="loaded">Clase agregada</h3></div>
+    <div class="texto2"><h3 [hidden]="!exist">Clase ya existente</h3></div>
     <h3>Cursos del Alumno</h3>
     <div class="current-courses-container" *ngFor="let course of studentCourses">
         <label> {{course.name}} </label>

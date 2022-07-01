@@ -53,7 +53,17 @@ export class DataService {
   }
 
   addStudent(student: Person): void {
+    student.idPerson = this.dataPersonsList.length + 1;
+
     this.dataPersonsList.push(student);
+  }
+
+  addClassroomToStudent(idPerson: number, course: Course) {
+    let indexToEdit= this.dataPersonsList.findIndex((person:Person) => {
+      return person.idPerson == idPerson;
+    })
+
+    this.dataPersonsList[indexToEdit].courses.push(course.idCourse);
   }
 
   editStudent(student: Person) {

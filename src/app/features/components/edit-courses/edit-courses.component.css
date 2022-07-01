@@ -5,3 +5,29 @@
     align-items: center;
     padding: 10px;
 }
+
+.actions {
+    display: flex;
+}
+
+.texto {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.texto h3 {
+    color: green;
+    font-weight: bold;
+}
+
+.texto2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.texto2 h3 {
+    color: red;
+    font-weight: bold;
+}

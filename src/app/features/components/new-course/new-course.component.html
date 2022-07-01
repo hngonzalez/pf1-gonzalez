@@ -1,1 +1,18 @@
-<p>new-course works!</p>
+<!--mat-card>
+    <div>
+        <form [formGroup]="studentForm">
+            <mat-form-field>
+                <input matInput
+                type="text" placeholder="Nombre" formControlName="name" >
+                <mat-error *ngIf="studentForm.get('name')?.errors?.required && studentForm.get('name')?.touched">Campo requerido</mat-error>
+            </mat-form-field>
+        </form>
+        <div class="actions">
+            <button mat-flat-button color="primary"
+                (click)="onSave()"
+                [disabled]="studentForm.invalid">
+                Guardar
+            </button>
+        </div>
+    </div>
+</mat-card-->

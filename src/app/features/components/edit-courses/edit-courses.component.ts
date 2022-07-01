@@ -1,6 +1,6 @@
 import { DataService } from './../../services/data.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Course } from '../../models/course';
 
@@ -12,7 +12,10 @@ import { Course } from '../../models/course';
 export class EditCoursesComponent implements OnInit {
   studentCourses?: Course[];
   availableCourses?: any;
-
+  newCourse?: Course;
+  loaded: boolean = true;
+  exist: boolean = false;
+  
   constructor(
     public dialogRef: MatDialogRef<EditCoursesComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -27,5 +30,26 @@ export class EditCoursesComponent implements OnInit {
 
   removeClassroom(idCourse: number) {
     this.studentCourses = this._dataService.removeClassroom(this.data.elementRow, idCourse);
+  }
+
+  onCourseChange() {
+    this.studentCourses.forEach(element => {
+      console.log(element)
+      if (element.idCourse == this.newCourse.idCourse) {
+        
+        this.exist = true;
+        setTimeout(() => {
+          this.exist = false;
+        }, 1500);
+      }
+    });
+    if (!this.exist) {
+      this.studentCourses.push(this.newCourse);
+      this._dataService.addClassroomToStudent(this.data.elementRow.idPerson, this.newCourse);
+      this.loaded = false;
+      setTimeout(() => {
+        this.loaded = true;
+      }, 1500);
+    }
   }
 }

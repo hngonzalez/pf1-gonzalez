@@ -15,6 +15,7 @@ export class NewStudentComponent implements OnInit {
   availableCourses!: Classroom[];
   selected?: number;
   arCourses: number[] = [];
+  loadedUser: boolean = true;
 
   constructor(
     private fb: FormBuilder,
@@ -46,8 +47,13 @@ export class NewStudentComponent implements OnInit {
       this.studentForm.get('email').value,
       this.arCourses
     );
-  
-    console.log(newStudent)
+    
     this._dataService.addStudent(newStudent);
+    this.loadedUser = false;
+    setTimeout(() => {
+      this.loadedUser = true;
+    }, 1500);
+    this.studentForm.reset();
+    this.arCourses = [];
   }
 }
