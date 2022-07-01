@@ -1,3 +1,4 @@
+import { Course } from './../../models/course';
 
 import { DataService } from './../../services/data.service';
 import { Component, OnInit } from '@angular/core';
@@ -12,7 +13,7 @@ import { Person } from '../../models/person.model';
 })
 export class NewStudentComponent implements OnInit {
   studentForm!: FormGroup;
-  availableCourses!: Classroom[];
+  availableCourses!: Course[];
   selected?: number;
   arCourses: number[] = [];
   loadedUser: boolean = true;

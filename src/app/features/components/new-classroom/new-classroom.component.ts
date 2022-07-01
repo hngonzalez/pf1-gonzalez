@@ -1,3 +1,5 @@
+import { Classroom } from './../../models/classroom';
+import { DataService } from './../../services/data.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Course } from '../../models/course';
@@ -8,23 +10,67 @@ import { Course } from '../../models/course';
   styleUrls: ['./new-classroom.component.css']
 })
 export class NewClassroomComponent implements OnInit {
-  @Input() dataCourses?: Course[];
   classroomForm!: FormGroup;
+  availableClassroom?: Classroom[];
+  selected?: number;
+  arCourses: number[] = [];
+  saved: boolean = true;
+  classroom!: Classroom;
+  newCourse: string = '';
 
   constructor(
     private fb: FormBuilder,
+    private _dataService: DataService
   ) { 
     this.classroomForm = this.fb.group({
-      idPerson: new FormControl(""),
-      name: new FormControl("", [Validators.required]),
-      lastname: new FormControl("", [Validators.required]),
-      email: new FormControl("", [Validators.required, Validators.email]),
-      course: new FormControl("", [Validators.required])
+      idClassroom: new FormControl(""),
+      name: new FormControl("", [Validators.required])
     })
   }
 
   ngOnInit(): void {
-    console.log(this.dataCourses);
+    this.availableClassroom = this._dataService.getClassrooms();
+    this.classroomForm = this.fb.group({
+      idClassroom: new FormControl(""),
+      name: new FormControl("", [Validators.required])
+    })
+  }
+
+  onChange() {
+    this.classroomForm.setValue({
+      idClassroom: this.classroom.idClassroom,
+      name: this.classroom.name
+    });
+  }
+
+  selectionCourse(type: string) {
+    this.newCourse = type;
+    this.classroomForm.reset();
+  }
+
+  onSave(type: string) {
+    switch (type) {
+      case 'New':
+        this.saved = false;
+        let newClassroom = new Classroom(this.classroomForm.get('idClassroom').value, this.classroomForm.get('name').value);
+        this._dataService.addClassroom(newClassroom);
+        setTimeout(() => {
+          this.saved = true;
+        }, 1500);
+        break;
+
+      case 'Edit':
+        this.saved = false;
+        let editClassroom = new Classroom(this.classroomForm.get('idClassroom').value, this.classroomForm.get('name').value);
+        this._dataService.editClassroom(editClassroom);
+        setTimeout(() => {
+          this.saved = true;
+        }, 1500);
+        break;
+
+      default:
+        break;
+    }
   }
 
 }

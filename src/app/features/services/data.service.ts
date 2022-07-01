@@ -16,8 +16,8 @@ export class DataService {
     {idPerson: 5, name: 'Miguel', lastname: 'Gonzalez', email: 'fulanito@outlook.com', courses: []},
   ];
   dataCourses: Course[] = [
-    {idCourse: 1, name: 'Análisis Matemático'},
-    {idCourse: 2, name: 'Organización Empresarial'}
+    {idCourse: 1, name: 'Análisis Matemático', idClassroom: 1},
+    {idCourse: 2, name: 'Organización Empresarial', idClassroom: 2}
   ]
   dataClassrooms: Classroom[] = [
     {idClassroom: 1, name: 'Aula B254'},
@@ -35,6 +35,10 @@ export class DataService {
     return this.dataCourses;
   }
 
+  getClassrooms(): Classroom[] {
+    return this.dataClassrooms;
+  }
+
   getDataCoursesById(coursesId: number[]): Course[] {
     let arrayCourses: Course[] = [];
 
@@ -46,10 +50,6 @@ export class DataService {
 
     
     return arrayCourses;
-  }
-
-  getClassrooms(): Classroom[] {
-    return this.dataClassrooms;
   }
 
   addStudent(student: Person): void {
@@ -66,6 +66,18 @@ export class DataService {
     this.dataPersonsList[indexToEdit].courses.push(course.idCourse);
   }
 
+  addCourse(course: Course) {
+    course.idCourse = this.dataCourses.length + 1;
+    
+    this.dataCourses.push(course);
+  }
+
+  addClassroom(classroom: Classroom) {
+    classroom.idClassroom = this.dataClassrooms.length + 1;
+    
+    this.dataClassrooms.push(classroom);
+  }
+
   editStudent(student: Person) {
     let indexToEdit= this.dataPersonsList.findIndex((person:Person) => {
       return person.idPerson == student.idPerson;
@@ -74,6 +86,23 @@ export class DataService {
     this.dataPersonsList[indexToEdit].name = student.name;
     this.dataPersonsList[indexToEdit].lastname = student.lastname;
     this.dataPersonsList[indexToEdit].email = student.email;
+  }
+
+  editCourse(course: Course) {
+    console.log(course)
+    let indexToEdit= this.dataCourses.findIndex((courseElement:Course) => {
+      return courseElement.idCourse == course.idCourse;
+    })
+  
+    this.dataCourses[indexToEdit].name = course.name;
+  }
+
+  editClassroom(classroom: Classroom) {
+    let indexToEdit= this.dataClassrooms.findIndex((classroomElement: Classroom) => {
+      return classroomElement.idClassroom == classroom.idClassroom;
+    })
+  
+    this.dataClassrooms[indexToEdit].name = classroom.name;
   }
 
   removeClassroom(student:Person, idCourse: number) {

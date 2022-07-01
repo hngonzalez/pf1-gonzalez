@@ -1,18 +1,56 @@
-<!--mat-card>
-    <div>
-        <form [formGroup]="studentForm">
+<mat-card>
+    <div class="actions-new-edit">
+        <button mat-stroked-button color="primary"
+        (click)="selectionCourse('New')">
+            Nuevo
+        </button>
+        <button mat-stroked-button color="primary"
+        (click)="selectionCourse('Edit')">
+            Editar
+        </button>
+    </div>
+    <div *ngIf="newCourse == 'New'">
+        <mat-select (selectionChange)="onChangeClassroom()" [(ngModel)]="classroom">
+            <mat-option *ngFor="let classroom of availableClassrooms" [value]="classroom">
+                {{classroom.name}}
+            </mat-option>
+        </mat-select>
+        <form [formGroup]="courseForm">
             <mat-form-field>
                 <input matInput
-                type="text" placeholder="Nombre" formControlName="name" >
-                <mat-error *ngIf="studentForm.get('name')?.errors?.required && studentForm.get('name')?.touched">Campo requerido</mat-error>
+                type="text" placeholder="Nombre del curso" formControlName="name" >
+                <mat-error *ngIf="courseForm.get('name')?.errors?.required && courseForm.get('name')?.touched">Campo requerido</mat-error>
             </mat-form-field>
         </form>
         <div class="actions">
             <button mat-flat-button color="primary"
-                (click)="onSave()"
-                [disabled]="studentForm.invalid">
+                (click)="onSave('New')"
+                [disabled]="courseForm.invalid">
                 Guardar
             </button>
         </div>
+        <h2 [hidden]="saved">Guardado</h2>
     </div>
-</mat-card-->
+    <div *ngIf="newCourse == 'Edit'">
+        <mat-select (selectionChange)="onChange()" [(ngModel)]="course">
+            <mat-option *ngFor="let course of availableCourses" [value]="course">
+                {{course.name}}
+            </mat-option>
+        </mat-select>
+        <form [formGroup]="courseForm">
+            <mat-form-field>
+                <input matInput
+                type="text" placeholder="Nombre del curso" formControlName="name" >
+                <mat-error *ngIf="courseForm.get('name')?.errors?.required && courseForm.get('name')?.touched">Campo requerido</mat-error>
+            </mat-form-field>
+        </form>
+        <div class="actions">
+            <button mat-flat-button color="primary"
+                (click)="onSave('Edit')"
+                [disabled]="courseForm.invalid">
+                Guardar
+            </button>
+        </div>
+        <h2 [hidden]="saved">Guardado</h2>
+    </div>
+</mat-card>
