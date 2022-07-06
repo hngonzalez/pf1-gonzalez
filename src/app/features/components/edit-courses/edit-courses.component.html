@@ -11,10 +11,12 @@
     <div class="texto"><h3 [hidden]="loaded">Clase agregada</h3></div>
     <div class="texto2"><h3 [hidden]="!exist">Clase ya existente</h3></div>
     <h3>Cursos del Alumno</h3>
-    <div class="current-courses-container" *ngFor="let course of studentCourses">
-        <label> {{course.name}} </label>
-        <button mat-flat-button color="warn"
-            (click)="removeClassroom(course.idCourse)">Eliminar</button>
-    </div>
+    <ng-container>
+        <div class="current-courses-container" *ngFor="let course of studentCourses">
+            <label> {{course.name}} </label>
+            <button mat-flat-button color="warn"
+                (click)="removeClassroom(course.idCourse)">Eliminar</button>
+        </div>
+    </ng-container>
 
 </div>

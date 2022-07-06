@@ -1,3 +1,5 @@
+import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 import { Classroom } from './../models/classroom';
 import { Course } from './../models/course';
 import { Injectable } from '@angular/core';
@@ -9,10 +11,10 @@ import { Person } from '../models/person.model';
 })
 export class DataService {
   dataPersonsList: Person[] = [
-    {idPerson: 1, name: 'Franco', lastname: 'Gonzalez', email: 'fulanito@outlook.com', courses: [1,2]},
-    {idPerson: 2, name: 'Matias', lastname: 'Gonzalez', email: 'fulanito@outlook.com', courses: [1,2]},
+    {idPerson: 1, name: 'Franco', lastname: 'Gonzalez', email: 'fulanito@outlook.com', courses: [{idCourse: 1, name: 'Análisis Matemático', idClassroom: 1},{idCourse: 2, name: 'Organización Empresarial', idClassroom: 2}]},
+    {idPerson: 2, name: 'Matias', lastname: 'Gonzalez', email: 'fulanito@outlook.com', courses: [{idCourse: 1, name: 'Análisis Matemático', idClassroom: 1},{idCourse: 2, name: 'Organización Empresarial', idClassroom: 2}]},
     {idPerson: 3, name: 'Franco', lastname: 'Gonzalez', email: 'fulanito@outlook.com', courses: []},
-    {idPerson: 4, name: 'Laura', lastname: 'Gonzalez', email: 'fulanito@outlook.com', courses: [2]},
+    {idPerson: 4, name: 'Laura', lastname: 'Gonzalez', email: 'fulanito@outlook.com', courses: [{idCourse: 2, name: 'Organización Empresarial', idClassroom: 2}]},
     {idPerson: 5, name: 'Miguel', lastname: 'Gonzalez', email: 'fulanito@outlook.com', courses: []},
   ];
   dataCourses: Course[] = [
@@ -27,8 +29,8 @@ export class DataService {
 
   constructor() { }
 
-  getStudents(): Person[] {
-    return this.dataPersonsList;
+  getStudents(): Observable<Person[]> {
+    return of(this.dataPersonsList);
   }
 
   getCourses(): Course[] {
@@ -39,17 +41,18 @@ export class DataService {
     return this.dataClassrooms;
   }
 
-  getDataCoursesById(coursesId: number[]): Course[] {
-    let arrayCourses: Course[] = [];
+  getDataCoursesById(personId: number): Promise<Person> {
+    let index = this.dataPersonsList.findIndex((person:Person) => {
+      return person.idPerson == personId;
+    })
 
-    this.dataCourses.forEach((element:any) => {
-      if (coursesId.includes(element.idCourse)) {
-        arrayCourses.push(element);  
+    return new Promise((resolve, rejects) => {
+      const person = this.dataPersonsList[index];
+      if (person) {
+        return resolve(person)
       }
-    });
-
-    
-    return arrayCourses;
+      rejects({mensaje: 'error'})
+    })
   }
 
   addStudent(student: Person): void {
@@ -59,11 +62,11 @@ export class DataService {
   }
 
   addClassroomToStudent(idPerson: number, course: Course) {
-    let indexToEdit= this.dataPersonsList.findIndex((person:Person) => {
+    let indexToEdit = this.dataPersonsList.findIndex((person:Person) => {
       return person.idPerson == idPerson;
     })
 
-    this.dataPersonsList[indexToEdit].courses.push(course.idCourse);
+    this.dataPersonsList[indexToEdit].courses.push(course);
   }
 
   addCourse(course: Course) {
@@ -105,35 +108,23 @@ export class DataService {
     this.dataClassrooms[indexToEdit].name = classroom.name;
   }
 
-  removeClassroom(student:Person, idCourse: number) {
+  removeClassroom(idPerson: number, idCourse: number) {
     let indexClassToRemove = this.dataPersonsList.findIndex((person:Person) => {
-      return person.idPerson == student.idPerson;
+      return person.idPerson == idPerson;
     })
 
-    let index = this.dataPersonsList[indexClassToRemove].courses.indexOf(idCourse); 
-    let array2: Course[] = [];
+    let indexClass2ToRemove = this.dataPersonsList[indexClassToRemove].courses.findIndex((course: Course) => {
+      return course.idCourse == idCourse;
+    })
 
-    if (index !== -1) {
-      this.dataPersonsList[indexClassToRemove].courses.splice(index,1);
-      
-
-      this.dataCourses.forEach((element:any) => {
-        if (this.dataPersonsList[indexClassToRemove].courses.includes(element.idCourse)) {
-          array2.push(element);  
-        }
-      });
-    }
-    
-    return array2;
+    this.dataPersonsList[indexClassToRemove].courses.splice(indexClass2ToRemove,1);
   }
 
-  deleteStudent(student: Person): Person[] {
+  deleteStudent(student: Person) {
     let indexToDelete = this.dataPersonsList.findIndex( (person:Person) => {
       return person.idPerson == student.idPerson;
     })
 
     this.dataPersonsList.splice(indexToDelete, 1);
-
-    return this.dataPersonsList;
   }
 }

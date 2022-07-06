@@ -3,7 +3,7 @@ export class Person {
     name: string;
     lastname: string;
     email: string;
-    courses?: number[];
+    courses?: any[];
 
     constructor(idPerson?: number, name?: string, lastname?: string, email?: string, courses?: number[]) {
         this.idPerson = idPerson;

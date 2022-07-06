@@ -1,6 +1,7 @@
+import { Subscription } from 'rxjs';
 import { EditStudentComponent } from './../edit-student/edit-student.component';
 import { MatDialog } from '@angular/material/dialog';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Person } from '../../models/person.model';
 import { DataService } from '../../services/data.service';
 import { EditCoursesComponent } from '../edit-courses/edit-courses.component';
@@ -11,8 +12,9 @@ import { NewStudentComponent } from '../new-student/new-student.component';
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css']
 })
-export class ListComponent implements OnInit {
-  @Input() dataPersonsList?: Person[];
+export class ListComponent implements OnInit, OnDestroy {
+  dataPersonsList?: Person[];
+  dataPersonsList$?: Subscription;
   studentsList?: Person[];
   confirmation: boolean = false;
   
@@ -25,7 +27,17 @@ export class ListComponent implements OnInit {
 
   ngOnInit(): void {
     this.confirmation = false;
-    this.dataPersonsList = this._dataService.getStudents();
+    //this.dataPersonsList = this._dataService.getStudents();
+    this.dataPersonsList$ = this._dataService.getStudents()
+    .subscribe((studentList:Person[]) => {
+      this.dataPersonsList = studentList;
+    }, error => {
+      console.log('no se pudo obtener el listado de personas')
+    });
+  }
+
+  ngOnDestroy(): void {
+      this.dataPersonsList$.unsubscribe();
   }
 
   /**
@@ -58,7 +70,7 @@ export class ListComponent implements OnInit {
   }
 
   deleteStudent(student: Person) {
-    this.dataPersonsList = this._dataService.deleteStudent(student);
-    this.confirmation = true;
+    this._dataService.deleteStudent(student);
   }
+  
 }

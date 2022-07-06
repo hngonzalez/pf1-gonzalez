@@ -1,6 +1,7 @@
+import { Subscription } from 'rxjs';
 import { DataService } from './../../services/data.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Component, Inject, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Course } from '../../models/course';
 
@@ -9,8 +10,9 @@ import { Course } from '../../models/course';
   templateUrl: './edit-courses.component.html',
   styleUrls: ['./edit-courses.component.css']
 })
-export class EditCoursesComponent implements OnInit {
-  studentCourses?: Course[];
+export class EditCoursesComponent implements OnInit, OnDestroy {
+  studentCourses?: any[];
+  studentCourses$?: Subscription = new Subscription;
   availableCourses?: any;
   newCourse?: Course;
   loaded: boolean = true;
@@ -25,18 +27,24 @@ export class EditCoursesComponent implements OnInit {
 
   ngOnInit(): void {
     this.availableCourses = this._dataService.getCourses();
-    this.studentCourses = this._dataService.getDataCoursesById(this.data.elementRow.courses);
+    //this.studentCourses = this._dataService.getDataCoursesById(this.data.elementRow.courses);
+    this._dataService.getDataCoursesById(this.data.elementRow)
+    .then((resp:any) => {
+      this.studentCourses = resp.courses
+    })
+  }
+
+  ngOnDestroy() {
+    this.studentCourses$.unsubscribe();
   }
 
   removeClassroom(idCourse: number) {
-    this.studentCourses = this._dataService.removeClassroom(this.data.elementRow, idCourse);
+    this._dataService.removeClassroom(this.data.elementRow, idCourse);
   }
 
   onCourseChange() {
     this.studentCourses.forEach(element => {
-      console.log(element)
       if (element.idCourse == this.newCourse.idCourse) {
-        
         this.exist = true;
         setTimeout(() => {
           this.exist = false;
@@ -44,8 +52,7 @@ export class EditCoursesComponent implements OnInit {
       }
     });
     if (!this.exist) {
-      this.studentCourses.push(this.newCourse);
-      this._dataService.addClassroomToStudent(this.data.elementRow.idPerson, this.newCourse);
+      this._dataService.addClassroomToStudent(this.data.elementRow, this.newCourse);
       this.loaded = false;
       setTimeout(() => {
         this.loaded = true;
